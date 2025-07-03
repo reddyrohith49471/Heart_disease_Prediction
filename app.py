@@ -22,5 +22,12 @@ def predict_api():
     print(output[0])
     return jsonify({'prediction': int(output[0])})
 
+@app.route('/predict',methods=['POST'])
+def predict():
+    data = [float(x) for x in request.form.values()]
+    final_input = scaling.transform(np.array(data).reshape(1,-1))
+    output = LR.predict(final_input)
+    return render_template("home.html",prediction_text="The Heart Disease prediction is {}".format(output))
+
 if __name__ == "__main__":
     app.run(debug=True)
